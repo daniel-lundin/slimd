@@ -1,6 +1,16 @@
-// upper half▀
-// lower half ▄
-// full half █
+// ▀ upper half
+// ▄ lower half 
+// ▐	Right half block
+// ▌	Left half block
+// █ full 
+// ▖	Quadrant lower left
+// ▗	Quadrant lower right
+// ▘	Quadrant upper left
+// ▝ Quadrant upper right
+// ▙	
+// ▚
+// ▛
+// ▜
 
 module.exports = [
   [
@@ -34,9 +44,9 @@ module.exports = [
     "█   ",
   ],
   [
-    "▄▄▄▄",
+    "▗▄▄▖",
     "█ ▄ ",
-    "█▄▄▀",
+    "▜▄▄▀",
   ],
   [
     "▄  ▄",
@@ -70,8 +80,8 @@ module.exports = [
   ],
   [
     "▄  ▄",
-    "█▀▄█",
-    "█  █",
+    "█▚▖█",
+    "█ ▝█",
   ],
   [
     " ▄▄ ",
@@ -81,7 +91,7 @@ module.exports = [
   [
     "▄▄▄ ",
     "█  █",
-    "█▀▀▀",
+    "█▀▀▘",
   ],
   [
     " ▄▄ ",
@@ -90,11 +100,11 @@ module.exports = [
   ],
   [
     "▄▄▄ ",
-    "█▄▄█",
+    "█▄▄▛",
     "█  █",
   ],
   [
-    " ▄▄▄",
+    " ▄▄▖",
     "█▄▄ ",
     "▄▄▄▀",
   ],
@@ -102,6 +112,11 @@ module.exports = [
     "▄▄▄",
     " █ ",
     " █ ",
+  ],
+  [
+    "▄ ▄",
+    "█ █",
+    "█▄█",
   ],
   [
     "▄ ▄",

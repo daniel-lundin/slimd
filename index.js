@@ -4,8 +4,17 @@ const cfonts = require("cfonts");
 const colors = require("colors");
 const print = require("./print");
 
-function printMD(markdown) {
+function extractSlides(markdown) {
+  const slideIndex = 0;
+  const slides = [];
   const renderer = new marked.Renderer();
+  function pushContent(text) {
+    if (slides.length === 0) {
+      return;
+    }
+    const currentSlide = slides[slides.length - 1];
+    currentSlide.content += text;
+  }
 
   renderer.heading = function(text, level) {
     if (level === 1) {
@@ -13,22 +22,30 @@ function printMD(markdown) {
         font: "block",
         colors: ["white", "red"]
       });
-      return font.string;
+      slides.push({
+        title: font.string,
+        content: ""
+      });
+    } else {
+      slides.push({
+        title: print(text),
+        content: ""
+      });
     }
-    return print(text);
   };
 
-  renderer.list = text => text;
-  renderer.listitem = text => ` - ${text}\n`;
-  renderer.paragraph = text => `${text}\n`;
+  renderer.listitem = text => pushContent(` - ${text}\n`);
+  renderer.paragraph = text => pushContent(`${text}\n`);
+  renderer.codespan = text => pushContent(`\`${text}\``);
+  renderer.code = code => pushContent(code);
   renderer.strong = text => colors.bold(text);
   renderer.em = text => colors.italic(text);
-  renderer.codespan = text => `\`${text}\``;
-  renderer.br = () => "\n";
+  renderer.br = () => pushContent("\n");
   renderer.del = text => colors.strikethrough(text);
-  renderer.link = href => colors.underline(href);
 
-  console.log(marked(markdown, { renderer: renderer }));
+  marked(markdown, { renderer: renderer });
+
+  return slides;
 }
 
 if (process.argv.length !== 3) {
@@ -36,4 +53,9 @@ if (process.argv.length !== 3) {
   process.exit(1);
 }
 
-printMD(fs.readFileSync(process.argv[2]).toString());
+const slides = extractSlides(fs.readFileSync(process.argv[2]).toString());
+
+slides.forEach(slide => {
+  console.log(slide.title);
+  console.log(slide.content);
+});
