@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const fs = require("fs");
 const marked = require("marked");
 const stripAnsi = require("strip-ansi");
