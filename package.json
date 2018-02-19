@@ -1,10 +1,13 @@
 {
-  "name": "termd",
+  "name": "slimd",
   "version": "0.0.1",
-  "description": "print markdown in your terminal",
+  "description": "markdown to terminal slideshow",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "slimd": "index.js"
   },
   "author": "d-dog@d-dog.se",
   "license": "MIT",
