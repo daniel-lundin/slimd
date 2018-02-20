@@ -94,7 +94,7 @@ function printCentered(str) {
     (acc, line) => Math.max(acc, line.length),
     0
   );
-  const leftPad = Math.floor((size.width - maxWidth) / 2);
+  const leftPad = Math.floor((size.get().width - maxWidth) / 2);
 
   console.log(lines.map(line => `${spaces(leftPad)}${line}`).join("\n"));
 }
@@ -103,19 +103,20 @@ function printContentPadding(title, content) {
   const titleLines = title.split("\n").length;
   const contentLines = content.split("\n").length;
 
-  const padding = Math.round((size.height - titleLines - contentLines) / 2);
+  const padding = Math.round(
+    (size.get().height - titleLines - contentLines) / 2
+  );
   Array.from({ length: padding }).forEach(() => console.log(""));
 }
 
 function renderSlide(slideIndex) {
   clearScreen();
+  process.stdout.write("\u001b[?25l");
   const { title, content } = slides[slideIndex];
   printCentered(title);
   printContentPadding(title, content);
   printCentered(content);
   process.stdout.write("\u001b[?25l");
-  // console.log(slides[slideIndex].title);
-  // console.log(slides[slideIndex].content);
 }
 
 clearScreen();
@@ -130,10 +131,11 @@ stdin.on("data", function(key) {
     slideIndex = Math.max(0, slideIndex - 1);
     renderSlide(slideIndex);
   }
-  if (key === " ") {
-    console.log("space!");
+  if (key === "r") {
+    renderSlide(slideIndex);
   }
   if (key === "\u0003") {
+    process.stdout.write("\u001b[?25h");
     process.exit();
   }
 });
