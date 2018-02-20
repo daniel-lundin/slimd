@@ -7,6 +7,7 @@ const cfonts = require("cfonts");
 const colors = require("colors");
 const size = require("window-size");
 const highlight = require("cli-highlight").highlight;
+const decode = require("unescape");
 
 const print = require("./print");
 
@@ -25,7 +26,7 @@ function extractSlides(markdown) {
       return;
     }
     const currentSlide = slides[slides.length - 1];
-    currentSlide.content += text;
+    currentSlide.content += decode(text);
   }
 
   renderer.heading = function(text, level) {
@@ -46,10 +47,11 @@ function extractSlides(markdown) {
     }
   };
 
-  renderer.listitem = text => pushContent(` - ${text}\n`);
-  renderer.paragraph = text => pushContent(`${text}\n`);
+  renderer.listitem = text => pushContent(`${colors.green("▶")} ${text}\n\n`);
+  renderer.paragraph = text => pushContent(`${text}\n\n`);
   renderer.codespan = text => pushContent(`\`${text}\``);
-  renderer.code = code => pushContent(highlight(code));
+  renderer.code = (code, language) =>
+    pushContent(highlight(code, { language }));
   renderer.strong = text => colors.bold(text);
   renderer.em = text => colors.italic(text);
   renderer.br = () => pushContent("\n");

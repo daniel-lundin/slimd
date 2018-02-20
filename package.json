@@ -18,6 +18,7 @@
     "colors": "^1.1.2",
     "marked": "^0.3.12",
     "strip-ansi": "^4.0.0",
+    "unescape": "^1.0.1",
     "window-size": "^1.1.0"
   }
 }
