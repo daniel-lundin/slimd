@@ -9,7 +9,7 @@ const size = require("window-size");
 const highlight = require("cli-highlight").highlight;
 const decode = require("unescape");
 
-const print = require("./print");
+const blockFont = require("./block-font");
 
 function randomColor(str) {
   const headlineColors = [colors.green, colors.blue, colors.magenta];
@@ -41,7 +41,7 @@ function extractSlides(markdown) {
       });
     } else {
       slides.push({
-        title: `\n${randomColor(print(text))}\n`,
+        title: `\n${randomColor(blockFont(text))}\n`,
         content: ""
       });
     }

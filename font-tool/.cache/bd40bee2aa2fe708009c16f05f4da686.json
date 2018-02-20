@@ -1,1 +1,0 @@
-{"dependencies":[{"name":"./index.js","dynamic":true}],"generated":{"html":"<!DOCTYPE html>\n<html>\n  <head>\n    <title>Font tool</title>\n  </head>\n<body>\n  <div id=\"app\"></div>\n  <script src=\"/dist/font-tool.js\"></script>\n</body>\n</html>\n"},"hash":"ebad120e5b4d038ebeb8ebcb48095592","cacheData":{}}
