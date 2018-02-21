@@ -49,9 +49,8 @@ function extractSlides(markdown) {
 
   renderer.listitem = text => pushContent(`${colors.green("▶")} ${text}\n\n`);
   renderer.paragraph = text => pushContent(`${text}\n\n`);
-  renderer.codespan = text => pushContent(`\`${text}\``);
-  renderer.code = (code, language) =>
-    pushContent(highlight(code, { language }));
+  renderer.codespan = text => pushContent(`\`${colors.italic(text)}\``);
+  renderer.code = (code, language) => language ?  pushContent(highlight(code, { language })) : pushContent(code);
   renderer.strong = text => colors.bold(text);
   renderer.em = text => colors.italic(text);
   renderer.br = () => pushContent("\n");
@@ -77,7 +76,7 @@ stdin.resume();
 stdin.setEncoding("utf8");
 
 function clearScreen() {
-  process.stdout.write("\033c");
+  process.stdout.write("\x1Bc");
 }
 
 function spaces(length) {
