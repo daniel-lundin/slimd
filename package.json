@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "bundle": "echo '#!/usr/bin/env node' > bundle.js && browserify index.js --node >> bundle.js",
-    "prepublish": "num run bundle"
+    "prepublish": "npm run bundle"
   },
   "bin": {
     "slimd": "index.js"
