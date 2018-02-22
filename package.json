@@ -1,11 +1,11 @@
 {
   "name": "slimd",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "terminal slideshow from markdown",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "bump": "bump"
+    "bump": "bump --prompt --tag --push"
   },
   "bin": {
     "slimd": "index.js"
