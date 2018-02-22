@@ -9,7 +9,7 @@
     "prepublishOnly": "npm run bundle"
   },
   "bin": {
-    "slimd": "index.js"
+    "slimd": "bundle.js"
   },
   "author": "d-dog@d-dog.se",
   "files": [
