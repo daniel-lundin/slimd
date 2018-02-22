@@ -4,7 +4,8 @@
   "description": "terminal slideshow from markdown",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "bump": "bump"
   },
   "bin": {
     "slimd": "index.js"
@@ -19,5 +20,8 @@
     "strip-ansi": "^4.0.0",
     "unescape": "^1.0.1",
     "window-size": "^1.1.0"
+  },
+  "devDependencies": {
+    "version-bump-prompt": "^4.0.0"
   }
 }
