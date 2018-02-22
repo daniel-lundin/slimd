@@ -10,6 +10,7 @@ const highlight = require("cli-highlight").highlight;
 const decode = require("unescape");
 
 const blockFont = require("./block-font");
+const { onResize } = require("./resizer");
 
 function randomColor(str) {
   const headlineColors = [colors.green, colors.blue, colors.magenta];
@@ -50,7 +51,8 @@ function extractSlides(markdown) {
   renderer.listitem = text => pushContent(`${colors.green("▶")} ${text}\n\n`);
   renderer.paragraph = text => pushContent(`${text}\n\n`);
   renderer.codespan = text => pushContent(`\`${colors.italic(text)}\``);
-  renderer.code = (code, language) => language ?  pushContent(highlight(code, { language })) : pushContent(code);
+  renderer.code = (code, language) =>
+    language ? pushContent(highlight(code, { language })) : pushContent(code);
   renderer.strong = text => colors.bold(text);
   renderer.em = text => colors.italic(text);
   renderer.br = () => pushContent("\n");
@@ -121,6 +123,10 @@ function renderSlide(slideIndex) {
 clearScreen();
 renderSlide(slideIndex);
 
+onResize(() => {
+  renderSlide(slideIndex);
+});
+
 stdin.on("data", function(key) {
   if (key === "\u001b[C") {
     slideIndex = Math.min(slides.length - 1, slideIndex + 1);
@@ -128,9 +134,6 @@ stdin.on("data", function(key) {
   }
   if (key === "\u001b[D") {
     slideIndex = Math.max(0, slideIndex - 1);
-    renderSlide(slideIndex);
-  }
-  if (key === "r") {
     renderSlide(slideIndex);
   }
   if (key === "\u0003") {
