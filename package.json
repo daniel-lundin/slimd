@@ -1,6 +1,6 @@
 {
   "name": "slimd",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "terminal slideshow from markdown",
   "main": "index.js",
   "scripts": {
