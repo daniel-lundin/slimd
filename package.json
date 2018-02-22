@@ -1,6 +1,6 @@
 {
   "name": "slimd",
-  "version": "0.0.5",
+  "version": "0.0.6-0",
   "description": "terminal slideshow from markdown",
   "main": "bundle.js",
   "scripts": {
@@ -12,7 +12,9 @@
     "slimd": "index.js"
   },
   "author": "d-dog@d-dog.se",
-  "files": ["bundle.js"],
+  "files": [
+    "bundle.js"
+  ],
   "license": "MIT",
   "devDependencies": {
     "cfonts": "^1.1.3",
