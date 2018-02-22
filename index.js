@@ -3,7 +3,6 @@
 const fs = require("fs");
 const marked = require("marked");
 const stripAnsi = require("strip-ansi");
-const cfonts = require("cfonts");
 const colors = require("colors");
 const size = require("window-size");
 const highlight = require("cli-highlight").highlight;
@@ -31,21 +30,14 @@ function extractSlides(markdown) {
   }
 
   renderer.heading = function(text, level) {
-    if (level === 1) {
-      const font = cfonts.render(text, {
-        font: "block",
-        colors: ["white", "red"]
-      });
-      slides.push({
-        title: font.string,
-        content: ""
-      });
-    } else {
-      slides.push({
-        title: `\n${randomColor(blockFont(text))}\n`,
-        content: ""
-      });
-    }
+    const headingText = blockFont(text);
+    const length = headingText.split('\n')[0].length - 1;
+    const line = Array.from({ length }).map(() => '▄').join('');
+
+    slides.push({
+      title: level === 1 ? randomColor(`\n${line}\n${headingText}${line}\n`) : randomColor(`\n${headingText}`),
+      content: ""
+    });
   };
 
   renderer.listitem = text => pushContent(`${colors.green("▶")} ${text}\n\n`);
@@ -110,13 +102,29 @@ function printContentPadding(title, content) {
   Array.from({ length: padding }).forEach(() => console.log(""));
 }
 
+function printTitlePadding(title, content) {
+  const titleLines = title.split("\n").length;
+  const contentLines = content.split("\n").length;
+
+  const padding = Math.round(
+    (size.get().height - titleLines - contentLines) / 2
+  );
+  Array.from({ length: padding }).forEach(() => console.log(""));
+}
+
 function renderSlide(slideIndex) {
   clearScreen();
   process.stdout.write("\u001b[?25l");
   const { title, content } = slides[slideIndex];
-  printCentered(title);
-  printContentPadding(title, content);
-  printCentered(content);
+  if (slideIndex === 0) {
+    printTitlePadding(title,content);
+    printCentered(title);
+    printCentered(content);
+  } else {
+    printCentered(title);
+    printContentPadding(title, content);
+    printCentered(content);
+  }
   process.stdout.write("\u001b[?25l");
 }
 

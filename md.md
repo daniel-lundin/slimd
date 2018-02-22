@@ -1,9 +1,7 @@
 # First slide
 
-Test med lite *feta* ord => yeah!
 
-
-Test med lite **feta** och *kursiva* ord => yeah!
+lite **feta** och *kursiva* `ord`
 
 ## A sub-headline
 
