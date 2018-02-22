@@ -50,7 +50,7 @@ function extractSlides(markdown) {
 
   renderer.listitem = text => pushContent(`${colors.green("▶")} ${text}\n\n`);
   renderer.paragraph = text => pushContent(`${text}\n\n`);
-  renderer.codespan = text => pushContent(`\`${colors.italic(text)}\``);
+  renderer.codespan = text => `${colors.italic(text)}`;
   renderer.code = (code, language) =>
     language ? pushContent(highlight(code, { language })) : pushContent(code);
   renderer.strong = text => colors.bold(text);

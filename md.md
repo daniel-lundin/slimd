@@ -7,7 +7,7 @@ Test med lite **feta** och *kursiva* ord => yeah!
 
 ## A sub-headline
 
-En lista: 
+en liten `codespan` mitt i allt
 
   - First item
   - Second item
