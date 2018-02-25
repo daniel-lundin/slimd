@@ -46,7 +46,7 @@ function extractSlides(markdown) {
   };
 
   renderer.listitem = text => pushContent(`${colors.green("▶")} ${text}\n\n`);
-  renderer.paragraph = text => pushContent(`\n${text}\n`);
+  renderer.paragraph = text => pushContent(`\n${text}\n\n`);
   renderer.codespan = text => `${colors.italic(text)}`;
   renderer.code = (code, language) =>
     language
@@ -86,7 +86,7 @@ function spaces(length) {
     .join("");
 }
 
-function printCentered(str) {
+function getCentered(str) {
   const lines = str.split("\n");
   const plainLines = lines.map(line => stripAnsi(line));
 
@@ -96,44 +96,58 @@ function printCentered(str) {
   );
   const leftPad = Math.floor((size.get().width - maxWidth) / 2);
 
-  process.stdout.write(
-    lines.map(line => `${spaces(leftPad)}${line}`).join("\n")
-  );
+  const width = size.get().width;
+
+  return lines.map((line, index) => {
+    const spacesLeft = spaces(leftPad);
+    const spacesRight = spaces(
+      width - spacesLeft.length - plainLines[index].length
+    );
+    return `${spacesLeft}${line}${spacesRight}`;
+  });
 }
 
-function printContentPadding(title, content) {
+function getContentPadding(title, content) {
   const titleLines = title.split("\n").length;
   const contentLines = content.split("\n").length;
 
   const padding = Math.round(
     (size.get().height - titleLines - contentLines) / 2
   );
-  Array.from({ length: padding }).forEach(() => process.stdout.write("\n"));
+  return Array.from({ length: padding }).map(() => spaces(size.get().width));
 }
 
-function printTitlePadding(title, content) {
+function getTitlePadding(title, content) {
   const titleLines = title.split("\n").length;
   const contentLines = content.split("\n").length;
 
   const padding = Math.round(
     (size.get().height - titleLines - contentLines) / 2
   );
-  Array.from({ length: padding }).forEach(() => process.stdout.write("\n"));
+  return Array.from({ length: padding }).map(() => spaces(size.get().width));
 }
 
 function renderSlide(slideIndex) {
+  const { height, width } = size.get();
   clearScreen();
   process.stdout.write("\u001b[?25l");
   const { title, content } = slides[slideIndex];
+  const rows = [];
   if (slideIndex === 0) {
-    printTitlePadding(title, content);
-    printCentered(title);
-    printCentered(content);
+    rows.push(...getTitlePadding(title, content));
+    rows.push(...getCentered(title));
+    rows.push(...getCentered(content));
   } else {
-    printCentered(title);
-    printContentPadding(title, content);
-    printCentered(content);
+    rows.push(...getCentered(title));
+    rows.push(...getContentPadding(title, content));
+    rows.push(...getCentered(content));
   }
+
+  rows.push(
+    ...Array.from({ length: height - rows.length }).map(() => spaces(width))
+  );
+  // console.log(rows);
+  rows.forEach(line => console.log(line));
   process.stdout.write("\u001b[?25l");
 }
 
