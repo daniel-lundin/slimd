@@ -1,26 +1,30 @@
 {
   "name": "slimd",
-  "version": "0.0.9",
+  "version": "0.0.10-beta.2",
   "description": "terminal slideshow from markdown",
-  "main": "index.js",
+  "main": "bundle.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "bundle": "echo '#!/usr/bin/env node' > bundle.js && browserify index.js --node >> bundle.js",
+    "prepublishOnly": "npm run bundle",
     "bump": "bump --prompt --tag --push"
   },
   "bin": {
-    "slimd": "index.js"
+    "slimd": "bundle.js"
   },
   "author": "d-dog@d-dog.se",
+  "files": [
+    "bundle.js"
+  ],
   "license": "MIT",
-  "dependencies": {
+  "devDependencies": {
     "cli-highlight": "^1.2.3",
     "colors": "^1.1.2",
     "marked": "^0.3.12",
     "strip-ansi": "^4.0.0",
     "unescape": "^1.0.1",
-    "window-size": "^1.1.0"
-  },
-  "devDependencies": {
+    "window-size": "^1.1.0",
+    "browserify": "^16.1.0",
     "version-bump-prompt": "^4.0.0"
   }
 }
