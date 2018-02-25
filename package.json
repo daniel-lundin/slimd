@@ -1,6 +1,6 @@
 {
   "name": "slimd",
-  "version": "0.0.9",
+  "version": "0.0.10-beta.0",
   "description": "terminal slideshow from markdown",
   "main": "bundle.js",
   "scripts": {
