@@ -10,6 +10,7 @@ const decode = require("unescape");
 
 const blockFont = require("./block-font");
 const { onResize } = require("./resizer");
+const transition = require("./transition");
 
 function randomColor(str) {
   const headlineColors = [colors.green, colors.blue, colors.magenta];
@@ -79,6 +80,12 @@ stdin.setEncoding("utf8");
 function clearScreen() {
   process.stdout.write("\x1Bc");
 }
+function hideCursor() {
+  process.stdout.write("\u001b[?25l");
+}
+function showCursor() {
+  process.stdout.write("\u001b[?25h");
+}
 
 function spaces(length) {
   return Array.from({ length })
@@ -127,10 +134,8 @@ function getTitlePadding(title, content) {
   return Array.from({ length: padding }).map(() => spaces(size.get().width));
 }
 
-function renderSlide(slideIndex) {
+function getSlide(slideIndex) {
   const { height, width } = size.get();
-  clearScreen();
-  process.stdout.write("\u001b[?25l");
   const { title, content } = slides[slideIndex];
   const rows = [];
   if (slideIndex === 0) {
@@ -146,9 +151,15 @@ function renderSlide(slideIndex) {
   rows.push(
     ...Array.from({ length: height - rows.length }).map(() => spaces(width))
   );
-  // console.log(rows);
-  rows.forEach(line => console.log(line));
-  process.stdout.write("\u001b[?25l");
+  return rows;
+}
+
+function renderSlide(slideIndex) {
+  clearScreen();
+  hideCursor();
+  const slide = getSlide(slideIndex);
+  slide.forEach(line => console.log(line));
+  hideCursor();
 }
 
 clearScreen();
@@ -161,7 +172,8 @@ onResize(() => {
 stdin.on("data", function(key) {
   if (["\u001b[C", " "].includes(key)) {
     slideIndex = Math.min(slides.length - 1, slideIndex + 1);
-    renderSlide(slideIndex);
+    transition(getSlide(slideIndex));
+    // renderSlide(slideIndex);
   }
   if (key === "\u001b[D") {
     slideIndex = Math.max(0, slideIndex - 1);
