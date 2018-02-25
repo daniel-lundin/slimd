@@ -31,20 +31,27 @@ function extractSlides(markdown) {
 
   renderer.heading = function(text, level) {
     const headingText = blockFont(text);
-    const length = headingText.split('\n')[0].length - 1;
-    const line = Array.from({ length }).map(() => '▄').join('');
+    const length = headingText.split("\n")[0].length - 1;
+    const line = Array.from({ length })
+      .map(() => "▄")
+      .join("");
 
     slides.push({
-      title: level === 1 ? randomColor(`\n${line}\n${headingText}${line}\n`) : randomColor(`\n${headingText}`),
+      title:
+        level === 1
+          ? randomColor(`\n${line}\n${headingText}${line}\n`)
+          : randomColor(`\n${headingText}`),
       content: ""
     });
   };
 
   renderer.listitem = text => pushContent(`${colors.green("▶")} ${text}\n\n`);
-  renderer.paragraph = text => pushContent(`${text}\n\n`);
+  renderer.paragraph = text => pushContent(`\n${text}\n`);
   renderer.codespan = text => `${colors.italic(text)}`;
   renderer.code = (code, language) =>
-    language ? pushContent(highlight(code, { language })) : pushContent(code);
+    language
+      ? pushContent(highlight(`\n${code}\n`, { language }))
+      : pushContent(`\n${code}\n`);
   renderer.strong = text => colors.bold(text);
   renderer.em = text => colors.italic(text);
   renderer.br = () => pushContent("\n");
@@ -89,7 +96,9 @@ function printCentered(str) {
   );
   const leftPad = Math.floor((size.get().width - maxWidth) / 2);
 
-  console.log(lines.map(line => `${spaces(leftPad)}${line}`).join("\n"));
+  process.stdout.write(
+    lines.map(line => `${spaces(leftPad)}${line}`).join("\n")
+  );
 }
 
 function printContentPadding(title, content) {
@@ -99,7 +108,7 @@ function printContentPadding(title, content) {
   const padding = Math.round(
     (size.get().height - titleLines - contentLines) / 2
   );
-  Array.from({ length: padding }).forEach(() => console.log(""));
+  Array.from({ length: padding }).forEach(() => process.stdout.write("\n"));
 }
 
 function printTitlePadding(title, content) {
@@ -109,7 +118,7 @@ function printTitlePadding(title, content) {
   const padding = Math.round(
     (size.get().height - titleLines - contentLines) / 2
   );
-  Array.from({ length: padding }).forEach(() => console.log(""));
+  Array.from({ length: padding }).forEach(() => process.stdout.write("\n"));
 }
 
 function renderSlide(slideIndex) {
@@ -117,7 +126,7 @@ function renderSlide(slideIndex) {
   process.stdout.write("\u001b[?25l");
   const { title, content } = slides[slideIndex];
   if (slideIndex === 0) {
-    printTitlePadding(title,content);
+    printTitlePadding(title, content);
     printCentered(title);
     printCentered(content);
   } else {
@@ -136,7 +145,7 @@ onResize(() => {
 });
 
 stdin.on("data", function(key) {
-  if (key === "\u001b[C") {
+  if (["\u001b[C", " "].includes(key)) {
     slideIndex = Math.min(slides.length - 1, slideIndex + 1);
     renderSlide(slideIndex);
   }
@@ -144,7 +153,11 @@ stdin.on("data", function(key) {
     slideIndex = Math.max(0, slideIndex - 1);
     renderSlide(slideIndex);
   }
-  if (key === "\u0003") {
+  if (["\u0003", "q"].includes(key)) {
+    process.stdout.write("\u001b[?25h");
+    process.exit();
+  }
+  if (key.length === 1 && key.charCodeAt(0) === 27) {
     process.stdout.write("\u001b[?25h");
     process.exit();
   }

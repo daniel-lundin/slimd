@@ -8,7 +8,7 @@ function printWord(str) {
 
   const letters = letterIndices
     .map(index => index - 65)
-    .filter(index => (index >= 0 && index <= blocks.length) || index === -33);
+    .filter(index => (index >= 0 && index <= blocks.length - 1) || index === -33);
   let output = "";
   for (let i = 0; i < HEIGHT; ++i) {
     letters.forEach(letter => {
