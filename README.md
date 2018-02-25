@@ -4,10 +4,20 @@ Terminal slides from markdown
 
 ## Usage
 
-npx slimd [markdown-file]
+On node > 8, run with `npx`:
+
+```
+> npx slimd [markdown-file]
+```
+
+Otherwise, install globally with:
+
+```
+> npm install -g slimd
+```
 
 ## Keys
 
- - *Right arrow* - Navigate to next slide
- - *Left arrow* - Navigate to previous slide
- - *r* - Re-render current slide
+ - **Space**, **Right arrow** - Navigate to next slide
+ - **Left arrow** - Navigate to previous slide
+ - **q**, **CTRL-C**, **ESC** - Quit
