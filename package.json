@@ -10,7 +10,7 @@
     "bump": "bump --prompt --tag --push"
   },
   "bin": {
-    "slimd": "main.js"
+    "slimd": "bundle.js"
   },
   "author": "d-dog@d-dog.se",
   "files": [
