@@ -172,8 +172,15 @@ onResize(() => {
 stdin.on("data", function(key) {
   if (["\u001b[C", " "].includes(key)) {
     slideIndex = Math.min(slides.length - 1, slideIndex + 1);
+    renderSlide(slideIndex);
+  }
+  if (key === "t") {
+    slideIndex = Math.min(slides.length - 1, slideIndex + 1);
     transition(getSlide(slideIndex));
-    // renderSlide(slideIndex);
+  }
+  if (key === "T") {
+    slideIndex = Math.max(0, slideIndex - 1);
+    transition(getSlide(slideIndex));
   }
   if (key === "\u001b[D") {
     slideIndex = Math.max(0, slideIndex - 1);
