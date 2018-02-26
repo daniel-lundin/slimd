@@ -10,6 +10,7 @@ const decode = require("unescape");
 
 const blockFont = require("./block-font");
 const { onResize } = require("./resizer");
+const transition = require("./transition");
 
 function randomColor(str) {
   const headlineColors = [colors.green, colors.blue, colors.magenta];
@@ -46,7 +47,7 @@ function extractSlides(markdown) {
   };
 
   renderer.listitem = text => pushContent(`${colors.green("▶")} ${text}\n\n`);
-  renderer.paragraph = text => pushContent(`\n${text}\n`);
+  renderer.paragraph = text => pushContent(`\n${text}\n\n`);
   renderer.codespan = text => `${colors.italic(text)}`;
   renderer.code = (code, language) =>
     language
@@ -79,6 +80,12 @@ stdin.setEncoding("utf8");
 function clearScreen() {
   process.stdout.write("\x1Bc");
 }
+function hideCursor() {
+  process.stdout.write("\u001b[?25l");
+}
+function showCursor() {
+  process.stdout.write("\u001b[?25h");
+}
 
 function spaces(length) {
   return Array.from({ length })
@@ -86,7 +93,7 @@ function spaces(length) {
     .join("");
 }
 
-function printCentered(str) {
+function getCentered(str) {
   const lines = str.split("\n");
   const plainLines = lines.map(line => stripAnsi(line));
 
@@ -96,45 +103,63 @@ function printCentered(str) {
   );
   const leftPad = Math.floor((size.get().width - maxWidth) / 2);
 
-  process.stdout.write(
-    lines.map(line => `${spaces(leftPad)}${line}`).join("\n")
-  );
+  const width = size.get().width;
+
+  return lines.map((line, index) => {
+    const spacesLeft = spaces(leftPad);
+    const spacesRight = spaces(
+      width - spacesLeft.length - plainLines[index].length
+    );
+    return `${spacesLeft}${line}${spacesRight}`;
+  });
 }
 
-function printContentPadding(title, content) {
+function getContentPadding(title, content) {
   const titleLines = title.split("\n").length;
   const contentLines = content.split("\n").length;
 
   const padding = Math.round(
     (size.get().height - titleLines - contentLines) / 2
   );
-  Array.from({ length: padding }).forEach(() => process.stdout.write("\n"));
+  return Array.from({ length: padding }).map(() => spaces(size.get().width));
 }
 
-function printTitlePadding(title, content) {
+function getTitlePadding(title, content) {
   const titleLines = title.split("\n").length;
   const contentLines = content.split("\n").length;
 
   const padding = Math.round(
     (size.get().height - titleLines - contentLines) / 2
   );
-  Array.from({ length: padding }).forEach(() => process.stdout.write("\n"));
+  return Array.from({ length: padding }).map(() => spaces(size.get().width));
+}
+
+function getSlide(slideIndex) {
+  const { height, width } = size.get();
+  const { title, content } = slides[slideIndex];
+  const rows = [];
+  if (slideIndex === 0) {
+    rows.push(...getTitlePadding(title, content));
+    rows.push(...getCentered(title));
+    rows.push(...getCentered(content));
+  } else {
+    rows.push(...getCentered(title));
+    rows.push(...getContentPadding(title, content));
+    rows.push(...getCentered(content));
+  }
+
+  rows.push(
+    ...Array.from({ length: height - rows.length }).map(() => spaces(width))
+  );
+  return rows;
 }
 
 function renderSlide(slideIndex) {
   clearScreen();
-  process.stdout.write("\u001b[?25l");
-  const { title, content } = slides[slideIndex];
-  if (slideIndex === 0) {
-    printTitlePadding(title, content);
-    printCentered(title);
-    printCentered(content);
-  } else {
-    printCentered(title);
-    printContentPadding(title, content);
-    printCentered(content);
-  }
-  process.stdout.write("\u001b[?25l");
+  hideCursor();
+  const slide = getSlide(slideIndex);
+  slide.forEach(line => console.log(line));
+  hideCursor();
 }
 
 clearScreen();
@@ -148,6 +173,14 @@ stdin.on("data", function(key) {
   if (["\u001b[C", " "].includes(key)) {
     slideIndex = Math.min(slides.length - 1, slideIndex + 1);
     renderSlide(slideIndex);
+  }
+  if (key === "t") {
+    slideIndex = Math.min(slides.length - 1, slideIndex + 1);
+    transition(getSlide(slideIndex));
+  }
+  if (key === "T") {
+    slideIndex = Math.max(0, slideIndex - 1);
+    transition(getSlide(slideIndex));
   }
   if (key === "\u001b[D") {
     slideIndex = Math.max(0, slideIndex - 1);
