@@ -2,6 +2,7 @@
 
 Terminal slides from markdown
 
+![img](slimd.gif)
 ## Usage
 
 On node > 8, run with `npx`:
