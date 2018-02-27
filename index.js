@@ -10,11 +10,11 @@ const decode = require("unescape");
 
 const blockFont = require("./block-font");
 const { onResize } = require("./resizer");
-const transition = require("./transition");
+const { renderSlide, transition } = require("./transition");
 
 function randomColor(str) {
   const headlineColors = [colors.green, colors.blue, colors.magenta];
-  const index = Math.floor(Math.random() * headlineColors.length);
+  const index = Math.round(Math.random() * (headlineColors.length - 1));
   return headlineColors[index](str);
 }
 
@@ -154,25 +154,18 @@ function getSlide(slideIndex) {
   return rows;
 }
 
-function renderSlide(slideIndex) {
-  clearScreen();
-  hideCursor();
-  const slide = getSlide(slideIndex);
-  slide.forEach(line => console.log(line));
-  hideCursor();
-}
-
 clearScreen();
-renderSlide(slideIndex);
+hideCursor();
+renderSlide(getSlide(slideIndex));
 
 onResize(() => {
-  renderSlide(slideIndex);
+  renderSlide(getSlide(slideIndex));
 });
 
 stdin.on("data", function(key) {
   if (["\u001b[C", " "].includes(key)) {
     slideIndex = Math.min(slides.length - 1, slideIndex + 1);
-    renderSlide(slideIndex);
+    renderSlide(getSlide(slideIndex));
   }
   if (key === "t") {
     slideIndex = Math.min(slides.length - 1, slideIndex + 1);
@@ -184,7 +177,7 @@ stdin.on("data", function(key) {
   }
   if (key === "\u001b[D") {
     slideIndex = Math.max(0, slideIndex - 1);
-    renderSlide(slideIndex);
+    renderSlide(getSlide(slideIndex));
   }
   if (["\u0003", "q"].includes(key)) {
     process.stdout.write("\u001b[?25h");
