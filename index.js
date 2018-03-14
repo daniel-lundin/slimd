@@ -12,6 +12,11 @@ const blockFont = require("./block-font");
 const { onResize } = require("./resizer");
 const { renderSlide, transition } = require("./transition");
 
+const cell = (chr, style) => ({
+  character,
+  style
+});
+
 function randomColor(str) {
   const headlineColors = [colors.green, colors.blue, colors.magenta];
   const index = Math.round(Math.random() * (headlineColors.length - 1));
@@ -154,37 +159,41 @@ function getSlide(slideIndex) {
   return rows;
 }
 
-clearScreen();
-hideCursor();
-renderSlide(getSlide(slideIndex));
-
-onResize(() => {
+if (require.main === module) {
+  clearScreen();
+  hideCursor();
   renderSlide(getSlide(slideIndex));
-});
 
-stdin.on("data", function(key) {
-  if (["\u001b[C", " "].includes(key)) {
-    slideIndex = Math.min(slides.length - 1, slideIndex + 1);
+  onResize(() => {
     renderSlide(getSlide(slideIndex));
-  }
-  if (key === "t") {
-    slideIndex = Math.min(slides.length - 1, slideIndex + 1);
-    transition(getSlide(slideIndex));
-  }
-  if (key === "T") {
-    slideIndex = Math.max(0, slideIndex - 1);
-    transition(getSlide(slideIndex));
-  }
-  if (key === "\u001b[D") {
-    slideIndex = Math.max(0, slideIndex - 1);
-    renderSlide(getSlide(slideIndex));
-  }
-  if (["\u0003", "q"].includes(key)) {
-    process.stdout.write("\u001b[?25h");
-    process.exit();
-  }
-  if (key.length === 1 && key.charCodeAt(0) === 27) {
-    process.stdout.write("\u001b[?25h");
-    process.exit();
-  }
-});
+  });
+
+  stdin.on("data", function(key) {
+    if (["\u001b[C", " "].includes(key)) {
+      slideIndex = Math.min(slides.length - 1, slideIndex + 1);
+      renderSlide(getSlide(slideIndex));
+    }
+    if (key === "t") {
+      slideIndex = Math.min(slides.length - 1, slideIndex + 1);
+      transition(getSlide(slideIndex));
+    }
+    if (key === "T") {
+      slideIndex = Math.max(0, slideIndex - 1);
+      transition(getSlide(slideIndex));
+    }
+    if (key === "\u001b[D") {
+      slideIndex = Math.max(0, slideIndex - 1);
+      renderSlide(getSlide(slideIndex));
+    }
+    if (["\u0003", "q"].includes(key)) {
+      process.stdout.write("\u001b[?25h");
+      process.exit();
+    }
+    if (key.length === 1 && key.charCodeAt(0) === 27) {
+      process.stdout.write("\u001b[?25h");
+      process.exit();
+    }
+  });
+} else {
+  module.exports = extractSlides;
+}

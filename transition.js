@@ -24,7 +24,6 @@ function nonAnsiSlice(str, len) {
 function transition2(slide) {
   const maxXY = Math.max(slide.length, slide[0].length) * 4;
   const sleeper = () => sleep(5);
-  // console.log("maxXY", maxXY);
 
   Array.from({ length: maxXY })
     .map((_, index) => index)
