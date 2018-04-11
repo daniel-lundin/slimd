@@ -7,6 +7,7 @@ const colors = require("colors");
 const size = require("window-size");
 const highlight = require("cli-highlight").highlight;
 const decode = require("unescape");
+const { createChart } = require("aboxd");
 
 const blockFont = require("./block-font");
 const { onResize } = require("./resizer");
@@ -49,10 +50,12 @@ function extractSlides(markdown) {
   renderer.listitem = text => pushContent(`${colors.green("▶")} ${text}\n\n`);
   renderer.paragraph = text => pushContent(`\n${text}\n\n`);
   renderer.codespan = text => `${colors.italic(text)}`;
-  renderer.code = (code, language) =>
+  renderer.code = (code, language) => {
+    if (language === "aboxd") return pushContent(createChart(code));
     language
       ? pushContent(highlight(`\n${code}\n`, { language }))
       : pushContent(`\n${code}\n`);
+  };
   renderer.strong = text => colors.bold(text);
   renderer.em = text => colors.italic(text);
   renderer.br = () => pushContent("\n");
