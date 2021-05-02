@@ -19,12 +19,13 @@
   "license": "MIT",
   "devDependencies": {
     "aboxd": "^0.4.0",
+    "ansi-256-colors": "^1.1.0",
     "browserify": "^16.1.0",
     "cli-highlight": "^1.2.3",
     "colors": "^1.1.2",
+    "jimp": "^0.16.1",
     "marked": "^0.3.12",
     "strip-ansi": "^4.0.0",
-    "ttystudio": "0.0.16",
     "unescape": "^1.0.1",
     "version-bump-prompt": "^4.0.0",
     "window-size": "^1.1.0"

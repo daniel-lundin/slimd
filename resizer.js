@@ -10,7 +10,7 @@ function onResize(cb) {
       _width = width;
       _height = height;
     }
-  }, 100);
+  }, 300);
 }
 
 module.exports = { onResize };

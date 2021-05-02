@@ -4,7 +4,8 @@ This **might** be a *lie*
 
 ## Simple
 
-Just some text
+This is an image 
+![title](./img.png)
 
 ## A sub-headline
 
