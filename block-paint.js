@@ -15,10 +15,9 @@ function imgToBlocks(filePath, width) {
       for (let row = 0; row < resized.bitmap.height; row += 2) {
         let rowPixels = "";
         for (let col = 0; col < resized.bitmap.width; ++col) {
-          const isEven = row % 2 === 0;
           const bgColor = jimp.intToRGBA(resized.getPixelColor(col, row));
-          const fgColor = jimp.intToRGBA(resized.getPixelColor(col, row));
-          // console.log("r,g,b", r, g, b);
+          const fgColor = jimp.intToRGBA(resized.getPixelColor(col, row + 1));
+
           rowPixels +=
             colors.bg.getRgb(
               Math.round((bgColor.r / 255) * 5),
