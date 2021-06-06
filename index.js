@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const fs = require("fs");
+const readline = require("readline");
 const marked = require("marked");
 const stripAnsi = require("strip-ansi");
 const colors = require("colors");
@@ -38,7 +39,6 @@ async function extractImages(markdown, width) {
 }
 
 function extractSlides(markdown, imageMap) {
-  const slideIndex = 0;
   const slides = [];
   const renderer = new marked.Renderer();
   function pushContent(text) {
@@ -161,10 +161,6 @@ async function init() {
 
   let slideIndex = 0;
 
-  var stdin = process.openStdin();
-  stdin.setRawMode(true);
-  stdin.resume();
-  stdin.setEncoding("utf8");
 
   function getSlide(slideIndex) {
     const { height, width } = size.get();
@@ -187,8 +183,6 @@ async function init() {
     return rows;
   }
 
-  // clearScreen();
-
   hideCursor();
   renderSlide(getSlide(slideIndex));
 
@@ -205,29 +199,27 @@ async function init() {
     renderSlide(getSlide(slideIndex));
   });
 
-  stdin.on("data", function (key) {
-    if (["\u001b[C", " "].includes(key)) {
+  readline.emitKeypressEvents(process.stdin);
+  process.stdin.setRawMode(true);
+  process.stdin.on("keypress", (str, key) => {
+    if (["right", "space"].includes(key.name)) {
       slideIndex = Math.min(slides.length - 1, slideIndex + 1);
       renderSlide(getSlide(slideIndex));
     }
-    if (key === "t") {
-      slideIndex = Math.min(slides.length - 1, slideIndex + 1);
-      transition(getSlide(slideIndex));
-    }
-    if (key === "T") {
-      slideIndex = Math.max(0, slideIndex - 1);
-      transition(getSlide(slideIndex));
-    }
-    if (key === "\u001b[D") {
+    if (["left"].includes(key.name)) {
       slideIndex = Math.max(0, slideIndex - 1);
       renderSlide(getSlide(slideIndex));
     }
-    if (["\u0003", "q"].includes(key)) {
-      process.stdout.write("\u001b[?25h");
-      process.exit();
+    if (key.name === "t") {
+      slideIndex = Math.min(slides.length - 1, slideIndex + 1);
+      transition(getSlide(slideIndex));
     }
-    if (key.length === 1 && key.charCodeAt(0) === 27) {
-      process.stdout.write("\u001b[?25h");
+    if (key.name === "T") {
+      slideIndex = Math.max(0, slideIndex - 1);
+      transition(getSlide(slideIndex));
+    }
+    if (key.name === "q" || (key.ctrl === true && key.name === "c")) {
+      showCursor();
       process.exit();
     }
   });
