@@ -9,6 +9,7 @@
     "prepublishOnly": "npm run bundle",
     "bump": "bump --prompt --tag --push"
   },
+  "type": "module",
   "bin": {
     "slimd": "bundle.js"
   },
@@ -20,14 +21,14 @@
   "devDependencies": {
     "aboxd": "^0.4.0",
     "ansi-256-colors": "^1.1.0",
-    "browserify": "^16.1.0",
-    "cli-highlight": "^1.2.3",
-    "colors": "^1.1.2",
+    "browserify": "^17.0.0",
+    "cli-highlight": "^2.1.11",
+    "colors": "^1.4.0",
     "jimp": "^0.16.1",
-    "marked": "^0.3.12",
-    "strip-ansi": "^4.0.0",
+    "marked": "^2.0.7",
+    "strip-ansi": "^7.0.0",
     "unescape": "^1.0.1",
-    "version-bump-prompt": "^4.0.0",
-    "window-size": "^1.1.0"
+    "version-bump-prompt": "^6.1.0",
+    "window-size": "^1.1.1"
   }
 }

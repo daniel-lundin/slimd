@@ -1,4 +1,4 @@
-const stripAnsi = require("strip-ansi");
+import stripAnsi from "strip-ansi";
 const ESC = "\u001B[";
 
 const sleep = time => new Promise(resolve => setTimeout(resolve, time));
@@ -21,7 +21,7 @@ function nonAnsiSlice(str, len) {
   return "";
 }
 
-function transition2(slide) {
+export function transition(slide) {
   const maxXY = Math.max(slide.length, slide[0].length) * 4;
   const sleeper = () => sleep(5);
   // console.log("maxXY", maxXY);
@@ -40,33 +40,18 @@ function transition2(slide) {
     }, Promise.resolve());
 }
 
-function renderSlide(slide) {
+export function renderSlide(slide) {
   slide.forEach((s, index) => {
     process.stdout.write(cursorTo(0, index));
     process.stdout.write(slide[index]);
   });
 }
 
-function transition(slide) {
+export function transition2(slide) {
   return slide.reduce((acc, curr, index) => {
     return acc.then(() => sleep(20)).then(() => {
       process.stdout.write(cursorTo(0, index));
       process.stdout.write(curr);
     });
   }, Promise.resolve());
-}
-
-module.exports = {
-  renderSlide,
-  transition: transition2
-};
-
-if (require.main === module) {
-  const slide = ["1234", "1234", "1234"];
-  console.log("");
-  console.log("");
-  console.log("");
-  // console.log(nonAnsiSlice("123", 3));
-  transition2(slide);
-  // console.log(printWord(process.argv[2]));
 }

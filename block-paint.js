@@ -1,10 +1,10 @@
 // ▀ upper half
 // ▄ lower half
 
-const jimp = require("jimp");
-const colors = require("ansi-256-colors");
+import jimp from "jimp";
+import colors from "ansi-256-colors";
 
-function imgToBlocks(filePath, width) {
+export function imgToBlocks(filePath, width) {
   return new Promise((resolve, reject) => {
     jimp.read(filePath, (err, img) => {
       if (err) return reject(err);
@@ -42,7 +42,3 @@ function imgToBlocks(filePath, width) {
     });
   });
 }
-
-module.exports = {
-  imgToBlocks,
-};

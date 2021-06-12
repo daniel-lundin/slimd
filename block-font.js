@@ -1,7 +1,7 @@
-const blocks = require("./fonts/blocks.js");
+import blocks from "./fonts/blocks.js";
 
 const HEIGHT = 3;
-function printWord(str) {
+export default function printWord(str) {
   const letterIndices = Array.from(str).map(letter => {
     return letter.toUpperCase().charCodeAt(0);
   });
@@ -22,8 +22,3 @@ function printWord(str) {
   }
   return output;
 }
-
-if (require.main === module) {
-  console.log(printWord(process.argv[2]));
-}
-module.exports = printWord;

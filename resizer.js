@@ -1,6 +1,6 @@
-const size = require("window-size");
+import size from "window-size";
 
-function onResize(cb) {
+export function onResize(cb) {
   let _width = size.width;
   let _height = size.height;
   setInterval(() => {
@@ -11,12 +11,4 @@ function onResize(cb) {
       _height = height;
     }
   }, 300);
-}
-
-module.exports = { onResize };
-
-if (require.main === module) {
-  onResize((height, width) => {
-    console.log("new size", width, height);
-  });
 }

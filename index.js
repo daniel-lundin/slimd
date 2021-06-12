@@ -1,19 +1,19 @@
 #!/usr/bin/env node
 
-const fs = require("fs");
-const readline = require("readline");
-const marked = require("marked");
-const stripAnsi = require("strip-ansi");
-const colors = require("colors");
-const size = require("window-size");
-const highlight = require("cli-highlight").highlight;
-const decode = require("unescape");
-const { createChart } = require("aboxd");
+import fs from "fs";
+import readline from "readline";
+import marked from "marked";
+import stripAnsi from "strip-ansi";
+import colors from "colors";
+import size from "window-size";
+import { highlight } from "cli-highlight";
+import decode from "unescape";
+import { createChart } from "aboxd";
 
-const blockFont = require("./block-font");
-const { onResize } = require("./resizer");
-const { renderSlide, transition } = require("./transition");
-const { imgToBlocks } = require("./block-paint.js");
+import blockFont from "./block-font.js";
+import { onResize } from "./resizer.js";
+import { renderSlide, transition } from "./transition.js";
+import { imgToBlocks } from "./block-paint.js";
 
 function randomColor(str) {
   const headlineColors = [colors.green, colors.blue, colors.magenta];
@@ -88,11 +88,6 @@ function extractSlides(markdown, imageMap) {
 if (process.argv.length !== 3) {
   console.log("Usage: slimd [markdown file]");
   process.exit(1);
-}
-
-function clearScreen() {
-  return;
-  process.stdout.write("\x1Bc");
 }
 
 function hideCursor() {
