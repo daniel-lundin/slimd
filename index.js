@@ -21,12 +21,12 @@ function randomColor(str) {
   return headlineColors[index](str);
 }
 
-async function extractImages(markdown, width) {
+async function extractImages(markdown, width, height) {
   const renderer = new marked.Renderer();
   const imagePromises = {};
 
   renderer.image = (href) => {
-    imagePromises[href] = imgToBlocks(href, width);
+    imagePromises[href] = imgToBlocks(href, width, height);
   };
 
   marked(markdown, { renderer });
@@ -147,10 +147,11 @@ function getTitlePadding(title, content) {
 
 async function init() {
   const markdownContent = fs.readFileSync(process.argv[2]).toString();
-  const { width } = size.get();
+  const { width, height } = size.get();
   const imageMap = await extractImages(
     markdownContent,
-    Math.round(width * 0.8)
+    Math.round(width * 0.8),
+    height - 5
   );
   let slides = extractSlides(markdownContent, imageMap);
 
@@ -169,7 +170,6 @@ async function init() {
       rows.push(...getCentered(title));
       rows.push(...getContentPadding(title, content));
       rows.push(...getCentered(content));
-      // rows.push(content);
     }
 
     rows.push(
@@ -182,10 +182,11 @@ async function init() {
   renderSlide(getSlide(slideIndex));
 
   onResize(async () => {
-    const { width } = size.get();
+    const { width, height } = size.get();
     const imageMap = await extractImages(
       markdownContent,
-      Math.round(width * 0.8)
+      Math.round(width * 0.8),
+      height - 5,
     );
     slides = extractSlides(
       fs.readFileSync(process.argv[2]).toString(),

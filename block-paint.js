@@ -4,11 +4,11 @@
 import jimp from "jimp";
 import colors from "ansi-256-colors";
 
-export function imgToBlocks(filePath, width) {
+export function imgToBlocks(filePath, width, height) {
   return new Promise((resolve, reject) => {
     jimp.read(filePath, (err, img) => {
       if (err) return reject(err);
-      const resized = img.resize(width, jimp.AUTO);
+      const resized = img.scaleToFit(width, height);
 
       let blockImage = "";
 
